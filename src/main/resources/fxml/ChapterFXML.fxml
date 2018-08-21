@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="357.0" prefWidth="503.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gaochen.novel.downloader.controller.ChapterController">
+   <center>
+      <TableView fx:id="chapterTable" prefHeight="327.0" prefWidth="349.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="nameCol" prefWidth="132.0" text="章节名称" />
+          <TableColumn fx:id="urlCol" prefWidth="370.0" text="章节地址" />
+        </columns>
+      </TableView>
+   </center>
+   <top>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="547.0" minWidth="10.0" prefWidth="164.0" />
+            <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="547.0" minWidth="10.0" prefWidth="205.0" />
+            <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="393.0" minWidth="10.0" prefWidth="75.0" />
+            <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="393.0" minWidth="10.0" prefWidth="71.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button mnemonicParsing="false" onAction="#download" text="下载全本" GridPane.columnIndex="2" />
+            <Label fx:id="downloadProgress" text="下载进度：" />
+            <ProgressBar fx:id="downloadProgressBar" prefWidth="200.0" progress="0.0" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" onAction="#cancel" text="取消" GridPane.columnIndex="3" />
+         </children>
+      </GridPane>
+   </top>
+</BorderPane>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane fx:id="rootBorderPane" minWidth="648.0" prefHeight="426.0" prefWidth="679.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gaochen.novel.downloader.controller.MainController">
+   <top>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="388.0" minWidth="10.0" prefWidth="219.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="392.0" minWidth="10.0" prefWidth="107.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="468.0" minWidth="10.0" prefWidth="256.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="468.0" minWidth="10.0" prefWidth="73.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="406.0" minWidth="10.0" prefWidth="80.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TextField fx:id="textKey" prefHeight="22.0" prefWidth="133.0" />
+            <Button fx:id="btnSearch" mnemonicParsing="false" onAction="#search" text="搜索" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" onAction="#setting" text="设置" GridPane.columnIndex="4" />
+         </children>
+      </GridPane>
+   </top>
+   <center>
+      <TableView fx:id="tableViewNovel" prefHeight="366.0" prefWidth="596.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="typeCol" prefWidth="71.0" text="作品分类" />
+          <TableColumn fx:id="nameCol" prefWidth="97.0" text="作品名称" />
+            <TableColumn fx:id="updateCol" prefWidth="95.0" text="最新章节" />
+            <TableColumn fx:id="authorCol" prefWidth="63.0" text="作者" />
+            <TableColumn fx:id="updateDateCol" minWidth="8.0" prefWidth="95.0" text="更新时间" />
+            <TableColumn fx:id="statusCol" prefWidth="91.0" text="状态" />
+            <TableColumn fx:id="chapterCountCol" prefWidth="90.0" text="章节数" />
+            <TableColumn fx:id="operationCol" prefWidth="76.0" text="操作" />
+        </columns>
+      </TableView>
+   </center>
+   <bottom>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label fx:id="infoText" />
+         </children>
+      </GridPane>
+   </bottom>
+</BorderPane>
