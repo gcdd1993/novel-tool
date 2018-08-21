@@ -27,3 +27,12 @@
 
 - thread 线程数，执行下载任务的线程数
 - path 小说保存目录
+
+## 如何使用
+
+- 基于JDK1.8 开发，所以需要下载安装java1.8运行环境，[戳这里下载](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+- 下载release最新版本node-tool.jar,确保JDK安装正确，双击打开
+
+类似下图即可双击打开
+
+![](https://i.imgur.com/igcVms3.png)
