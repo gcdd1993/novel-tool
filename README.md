@@ -23,6 +23,10 @@
 
 ![](https://i.imgur.com/ZPjoST8.png)
 
+### 本地下载完成的文件目录演示
+
+![](https://i.imgur.com/isoxv14.png)
+
 ## 设置说明
 
 - thread 线程数，执行下载任务的线程数
