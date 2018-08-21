@@ -5,6 +5,10 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.8
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 repositories {
     maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
     mavenCentral()
@@ -30,7 +34,7 @@ jar {
     manifest {
         attributes(
                 "Manifest-Version": 1.0,
-                "Main-Class": "xxx.xxx.XxxClass")
+                "Main-Class": "com.gaochen.novel.downloader.Main")
     }
 
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
@@ -43,6 +47,6 @@ jar {
 apply plugin: 'javafx-gradle-plugin'
 
 jfx {
-    appName = "APP NAME"
-    mainClass = 'xxx.xxx.XxxClass'
+    appName = "Novel-Tool"
+    mainClass = 'com.gaochen.novel.downloader.Main'
 }
