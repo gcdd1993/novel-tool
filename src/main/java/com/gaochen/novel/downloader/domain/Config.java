@@ -13,4 +13,5 @@ import lombok.experimental.Accessors;
 public class Config {
     private int thread;
     private String path;
+    private boolean merge;
 }

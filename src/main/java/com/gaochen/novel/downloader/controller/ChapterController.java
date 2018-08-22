@@ -1,12 +1,11 @@
 package com.gaochen.novel.downloader.controller;
 
-import com.gaochen.novel.downloader.domain.Config;
 import com.gaochen.novel.downloader.domain.Novel;
 import com.gaochen.novel.downloader.domain.NovelChapter;
-import com.gaochen.novel.downloader.service.Downloader;
+import com.gaochen.novel.downloader.domain.NovelChapterTask;
 import com.gaochen.novel.downloader.util.SettingUtils;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,11 +25,6 @@ import java.util.ResourceBundle;
  */
 public class ChapterController implements Initializable, IWithValueInit<Novel> {
 
-    private static final String BASE_INFO = "共 %d 章";
-    private static final String BASE_TASK_INFO = "正在下载 %s ";
-
-    private static Novel novel;
-
     @FXML
     private TableView<NovelChapter> chapterTable;
 
@@ -46,37 +40,20 @@ public class ChapterController implements Initializable, IWithValueInit<Novel> {
     @FXML
     private ProgressBar downloadProgressBar;
 
-    private Task<Void> task;
-
-    private Downloader downloader;
+    private NovelChapterTask task;
 
     @Override
-    public void initData(Novel novel) {
-        ChapterController.novel = novel;
+    public void initData(Novel novel) throws IOException {
+        task = new NovelChapterTask(SettingUtils.read(),novel);
         chapterTable.getItems().clear();
         chapterTable.getItems().addAll(novel.getNovelChapterList());
     }
 
     @FXML
-    void download(ActionEvent event) throws IOException {
-        Config config = SettingUtils.read();
-        task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                downloader = new Downloader(config.getThread(), novel.getName(), config.getPath(), novel.getNovelChapterList());
-                downloader.start();
-                while (downloader.checkIfRunning() != 2) {
-                    long count = downloader.currentSuccess();
-                    int max = novel.getNovelChapterList().size();
-                    updateMessage(String.format(BASE_TASK_INFO,count) + " " + String.format(BASE_INFO,max));
-                    updateProgress(count,max);
-                    Thread.sleep(1000);
-                }
-                updateMessage("下载完成!");
-                return null;
-            }
-
-        };
+    void download(ActionEvent event) {
+        if(!task.getState().equals(Worker.State.READY)) {
+            task = new NovelChapterTask(task.getConfig(),task.getNovel());
+        }
         downloadProgressBar.progressProperty().unbind();
         downloadProgress.textProperty().unbind();
         downloadProgressBar.progressProperty().bind(task.progressProperty());
@@ -86,16 +63,10 @@ public class ChapterController implements Initializable, IWithValueInit<Novel> {
 
     @FXML
     void cancel(ActionEvent event) {
-        if(downloader != null) {
-            downloader.stopAll();
-        }
-        if(task != null) {
-            task.cancel(true);
-        }
+        task.cancel(true);
         downloadProgressBar.progressProperty().unbind();
         downloadProgress.textProperty().unbind();
         downloadProgressBar.setProgress(0);
-        downloadProgress.setText(String.format("被强制停止!已下载 %d 章",downloader.currentSuccess()));
     }
 
     @Override

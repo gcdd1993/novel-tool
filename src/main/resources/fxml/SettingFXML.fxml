@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="186.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gaochen.novel.downloader.controller.SettingController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="229.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gaochen.novel.downloader.controller.SettingController">
    <children>
       <Label layoutX="214.0" layoutY="7.0" text="设置" />
       <Label layoutX="40.0" layoutY="47.0" text="执行线程数：" />
@@ -14,6 +14,7 @@
       <Label layoutX="40.0" layoutY="98.0" text="存放目录：" />
       <TextField fx:id="pathText" layoutX="113.0" layoutY="94.0" prefHeight="22.0" prefWidth="294.0" />
       <Button fx:id="browseBtn" layoutX="426.0" layoutY="94.0" mnemonicParsing="false" onAction="#browse" text="浏览" />
-      <Button fx:id="OKBtn" layoutX="383.0" layoutY="141.0" mnemonicParsing="false" onAction="#save" text="确认" />
+      <Button fx:id="OKBtn" layoutX="388.0" layoutY="187.0" mnemonicParsing="false" onAction="#save" text="确认" />
+      <CheckBox fx:id="mergeCheck" layoutX="113.0" layoutY="137.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="175.0" text="是否合并为一个txt文件" />
    </children>
 </Pane>

@@ -10,8 +10,7 @@ import us.codecraft.xsoup.Xsoup;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -74,7 +73,7 @@ public class ContentService {
         Document document = Jsoup.connect(url).validateTLSCertificates(false).get();
         Elements elements = Xsoup.compile("//div[@id='list']/dl/dd/a").evaluate(document).getElements();
         if(elements != null && !elements.isEmpty()) {
-            return elements.stream().map(element -> {
+            return removeDuplicateWithOrder(elements.stream().map(element -> {
                 try {
                     NovelChapter novelChapter = new NovelChapter();
                     novelChapter.setName(Xsoup.compile("//text()").evaluate(element).get());
@@ -83,7 +82,7 @@ public class ContentService {
                 } catch (Exception ex) {
                     return null;
                 }
-            }).filter(this::validate).distinct().collect(Collectors.toList());
+            }).filter(this::validate).collect(Collectors.toList())); //跳过前面12章，是最新章节
         }else {
             return Collections.emptyList();
         }
@@ -104,13 +103,30 @@ public class ContentService {
         Document document = Jsoup.connect(url).validateTLSCertificates(false).get();
         try {
             String text = Xsoup.compile("//div[@id='content']/text()").evaluate(document)
-                    .get();
+                    .get().replace("chaptererror();章节错误,点此举报(免注册),举报后维护人员会在两分钟内校正章节内容,请耐心等待,并刷新页面。","");
             return text;
         } catch (Exception ex) {
             return null;
         }
-//        return
-//                .replace("chaptererror();章节错误,点此举报(免注册),举报后维护人员会在两分钟内校正章节内容,请耐心等待,并刷新页面。","");
+    }
+
+    /**
+     * 去重并维持顺序,有重复保留最后一个
+     */
+    private <T> List<T> removeDuplicateWithOrder(List<T> list) {
+        Set<T> set = new HashSet<>();
+        List<T> newList = new ArrayList<>();
+        list.forEach(element -> {
+            if(set.add(element)) {
+                newList.add(element);
+            }else {
+                newList.remove(element);
+                newList.add(element);
+            }
+        });
+        list.clear();
+        list.addAll(newList);
+        return list;
     }
 
 }

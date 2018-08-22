@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -42,6 +43,9 @@ public class SettingController implements Initializable {
     private Pane pane;
 
     @FXML
+    private CheckBox mergeCheck;
+
+    @FXML
     void browse(ActionEvent event) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
@@ -52,7 +56,7 @@ public class SettingController implements Initializable {
 
     @FXML
     void save(ActionEvent event) throws IOException {
-        SettingUtils.write(new Config().setPath(pathText.getText()).setThread(threadCombox.getValue()));
+        SettingUtils.write(new Config().setPath(pathText.getText()).setThread(threadCombox.getValue()).setMerge(mergeCheck.isSelected()));
         refresh();
         Stage stage = (Stage) pane.getScene().getWindow();
         stage.close();
@@ -73,5 +77,6 @@ public class SettingController implements Initializable {
         Config config = SettingUtils.read();
         pathText.setText(config.getPath());
         threadCombox.setValue(config.getThread());
+        mergeCheck.setSelected(config.isMerge());
     }
 }
