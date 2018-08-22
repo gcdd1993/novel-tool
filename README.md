@@ -1,5 +1,18 @@
 # novel-tool 小说下载器
 
+## 2018.8.22 更新说明
+
+- 新增功能：合并为一个txt文件保存
+- 修复一些bug
+
+支持合并单文件下载
+
+![](https://i.imgur.com/Y5iQW7o.png)
+
+效果：
+
+![](https://i.imgur.com/9nSSOqw.png)
+
 ## 功能说明
 
 - 基于站点 https://www.dingdiann.com 
