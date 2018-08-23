@@ -3,14 +3,14 @@ package com.gaochen.novel.downloader.service;
 import com.gaochen.novel.downloader.domain.Novel;
 import com.gaochen.novel.downloader.domain.NovelChapter;
 import com.gaochen.novel.downloader.domain.ResultBase;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-import us.codecraft.xsoup.Xsoup;
+import com.gaochen.novel.downloader.service.handler.IContentHandler;
+import lombok.NonNull;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -20,11 +20,11 @@ import java.util.stream.Collectors;
  * 内容获取服务
  */
 public class ContentService {
-    private static final String BASE_URL = "https://www.dingdiann.com/searchbook.php?keyword=%s";
-
     private ContentService() {}
 
     private volatile static ContentService instance;
+
+    private IContentHandler contentHandler;
 
     public static ContentService getInstance() {
         if(instance == null) {
@@ -37,55 +37,24 @@ public class ContentService {
         return instance;
     }
 
+    public void registerHandler(@NonNull IContentHandler newContentHandler) {
+        if(contentHandler == null || !contentHandler.equals(newContentHandler)) {
+            contentHandler = newContentHandler;
+        }
+    }
+
     /**
      * 通过关键词查找小说
      */
     public List<Novel> search(String key) throws IOException {
-        key = URLEncoder.encode(key,"UTF-8");
-        String url = String.format(BASE_URL,key);
-        Document document = Jsoup.connect(url).validateTLSCertificates(false).get();
-        Elements elements = Xsoup.compile("//div[@class='novelslist2']/ul/li").evaluate(document).getElements();
-        if(elements != null && !elements.isEmpty()) {
-            return elements.stream().map(element -> {
-                try {
-                    Novel novel = new Novel()
-                            .setType(Xsoup.compile("//span[@class='s1']/text()").evaluate(element).get().trim())
-                            .setUpdate(Xsoup.compile("//span[@class='s3']/a/text()").evaluate(element).get().trim())
-                            .setAuthor(Xsoup.compile("//span[@class='s4']/text()").evaluate(element).get().trim())
-                            .setUpdateDate(Xsoup.compile("//span[@class='s6']/text()").evaluate(element).get().trim())
-                            .setStatus(Xsoup.compile("//span[@class='s7']/text()").evaluate(element).get().trim());
-                    novel.setName(Xsoup.compile("//span[@class='s2']/a/text()").evaluate(element).get().trim());
-                    novel.setUrl(Xsoup.compile("//span[@class='s2']/a/@href").evaluate(element).get().trim());
-                    return novel;
-                } catch (Exception ex) {
-                    return null;
-                }
-            }).filter(this::validate).collect(Collectors.toList());
-        }else {
-            return Collections.emptyList();
-        }
+        return contentHandler.search(key).stream().filter(this::validate).collect(Collectors.toList());
     }
 
     /**
      * 通过小说链接获取小说章节列表
      */
     public List<NovelChapter> list(String url) throws IOException {
-        Document document = Jsoup.connect(url).validateTLSCertificates(false).get();
-        Elements elements = Xsoup.compile("//div[@id='list']/dl/dd/a").evaluate(document).getElements();
-        if(elements != null && !elements.isEmpty()) {
-            return removeDuplicateWithOrder(elements.stream().map(element -> {
-                try {
-                    NovelChapter novelChapter = new NovelChapter();
-                    novelChapter.setName(Xsoup.compile("//text()").evaluate(element).get());
-                    novelChapter.setUrl(Xsoup.compile("//@href").evaluate(element).get());
-                    return novelChapter;
-                } catch (Exception ex) {
-                    return null;
-                }
-            }).filter(this::validate).collect(Collectors.toList())); //跳过前面12章，是最新章节
-        }else {
-            return Collections.emptyList();
-        }
+        return removeDuplicateWithOrder(contentHandler.list(url).stream().filter(this::validate).collect(Collectors.toList()));
     }
 
     /**
@@ -99,15 +68,7 @@ public class ContentService {
      * 获取小说正文
      */
     public String text(String url) throws IOException {
-        // //div[@id='content']
-        Document document = Jsoup.connect(url).validateTLSCertificates(false).get();
-        try {
-            String text = Xsoup.compile("//div[@id='content']/text()").evaluate(document)
-                    .get().replace("chaptererror();章节错误,点此举报(免注册),举报后维护人员会在两分钟内校正章节内容,请耐心等待,并刷新页面。","");
-            return text;
-        } catch (Exception ex) {
-            return null;
-        }
+        return contentHandler.text(url);
     }
 
     /**
